@@ -1,3 +1,4 @@
+from pathlib import Path
 import cv2 #type: ignore
 import tempfile
 
@@ -8,12 +9,20 @@ def take_picture():
     with tempfile.NamedTemporaryFile(delete=False) as f:
         f.write(cv2.imencode('.png', frame)[1])
 
-    cap.release()
+        cap.release()
 
-    return f.name
+        return (f.name, f.read())
 
 def main(baseline: bool = False):
-    pass
+    if baseline:
+        with open(Path().home(), "wb") as f:
+            f.write(take_picture()[1])
+
+    else:
+
+        pic = take_picture()[1]
+        
+
 
 
 
