@@ -1,3 +1,4 @@
+from email.mime import base
 from pathlib import Path
 import PIL.Image
 import cv2 #type: ignore
@@ -13,7 +14,7 @@ def take_picture():
 
         cap.release()
 
-        return (f.name, f.read())
+        return (f.name, cv2.imencode('.png', frame)[1])
 
 def main(baseline: bool = False):
     if baseline:
@@ -21,15 +22,16 @@ def main(baseline: bool = False):
             f.write(take_picture()[1])
 
     else:
-        pic = PIL.Image.open(take_picture()[0])
-        base_pic = PIL.Image.open(f"Path().home()")
+        base_pic = PIL.Image.open(Path().home() / "baseline_pic_faceID.png")
+        pic = PIL.Image.open(take_picture()[0]).resize(base_pic.size)
+        average = [0, 0]
         for i in range(pic.size[0]):
             for j in range(pic.size[1]):
-                pass
+                if base_pic.getpixel((i, j)) == pic.getpixel((i, j)):
+                    average[0] += 1
+                average[1] += 1
 
-
-
-
+        print(average[0] / average[1] * 100)
 
 
 if __name__ == "__main__":
