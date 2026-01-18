@@ -34,7 +34,8 @@ def main(baseline: bool = False):
                     average[0] += 1
                 average[1] += 1
 
-        if average[0] / average[1] > 40:
+        print(average[0] / average[1] * 100)
+        if average[0] / average[1] * 100 > 85:
             print("Face detected")
         else:
             print("Face not detected")
