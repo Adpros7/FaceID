@@ -27,7 +27,8 @@ def main(baseline: bool = False):
         average = [0, 0]
         for i in range(pic.size[0]):
             for j in range(pic.size[1]):
-                if base_pic.getpixel((i, j)) == pic.getpixel((i, j)):
+
+                if all(abs(x - y) <= 10 for x, y in zip(base_pic.getpixel((i, j)), pic.getpixel((i, j)))): # type: ignore
                     average[0] += 1
                 average[1] += 1
 
