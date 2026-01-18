@@ -20,6 +20,7 @@ def take_picture():
 
 
 def main(baseline: bool = False):
+    coords_blackout = []
     if baseline:
         print("Please get out of frame for baseline pic. Be back in 5 seconds.")
         with open(f"{Path().home()}/baseline_pic_faceID_no_human.png", "wb") as f:
@@ -41,10 +42,13 @@ def main(baseline: bool = False):
             for j in range(baseline_pic_with_human.size[1]):
                 if all(abs(x - y) <= 7 for x, y in zip(baseline_pic_no_human.getpixel((i, j)), pic.baseline_pic_with_human.getpixel((i, j)))):  # type: ignore
                     PIL.ImageDraw.Draw(baseline_pic_with_human).point((i, j), (0, 0, 0))
+                    coords_blackout.append((i, j))
 
     else:
         base_pic = PIL.Image.open(Path().home() / "baseline_pic_faceID.png")
         pic = PIL.Image.open(take_picture()[0]).resize(base_pic.size)
+        for x, y in coords_blackout:
+            PIL.ImageDraw.Draw(pic).point((x, y), (0, 0, 0))
         average = [0, 0]
         for i in range(pic.size[0]):
             for j in range(pic.size[1]):
