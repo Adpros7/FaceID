@@ -1,6 +1,7 @@
 from email.mime import base
 from pathlib import Path
 import PIL.Image
+import PIL.ImageDraw
 import cv2  # type: ignore
 import tempfile
 import PIL
@@ -21,7 +22,7 @@ def take_picture():
 def main(baseline: bool = False):
     if baseline:
         print("Please get out of frame for baseline pic. Be back in 5 seconds.")
-        with open(f"{Path().home()}/baseline_pic_faceID.png", "wb") as f:
+        with open(f"{Path().home()}/baseline_pic_faceID_no_human.png", "wb") as f:
             f.write(take_picture()[1])
 
         print("Be in the frame for next picture.")
@@ -31,6 +32,15 @@ def main(baseline: bool = False):
         with open(f"{Path().home()}/baseline_pic_faceID.png", "wb") as f:
             f.write(take_picture()[1])
         print("Done")
+        baseline_pic_no_human = PIL.Image.open(
+            f"{Path().home()}/baseline_pic_faceID_no_human.png")
+        baseline_pic_with_human = PIL.Image.open(
+            f"{Path().home()}/baseline_pic_faceID.png")
+        baseline_pic_no_human.resize(baseline_pic_with_human.size)
+        for i in range(baseline_pic_with_human.size[0]):
+            for j in range(baseline_pic_with_human.size[1]):
+                if all(abs(x - y) <= 7 for x, y in zip(baseline_pic_no_human.getpixel((i, j)), pic.baseline_pic_with_human.getpixel((i, j)))):  # type: ignore
+                    PIL.ImageDraw.Draw(baseline_pic_with_human).point((i, j), (0, 0, 0))
 
     else:
         base_pic = PIL.Image.open(Path().home() / "baseline_pic_faceID.png")
