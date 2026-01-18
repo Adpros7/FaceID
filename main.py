@@ -1,9 +1,10 @@
 from email.mime import base
 from pathlib import Path
 import PIL.Image
-import cv2 #type: ignore
+import cv2  # type: ignore
 import tempfile
 import PIL
+
 
 def take_picture():
     cap = cv2.VideoCapture(0)
@@ -15,6 +16,7 @@ def take_picture():
         cap.release()
 
         return (f.name, cv2.imencode('.png', frame)[1])
+
 
 def main(baseline: bool = False):
     if baseline:
@@ -28,11 +30,11 @@ def main(baseline: bool = False):
         for i in range(pic.size[0]):
             for j in range(pic.size[1]):
 
-                if all(abs(x - y) <= 10 for x, y in zip(base_pic.getpixel((i, j)), pic.getpixel((i, j)))): # type: ignore
+                if all(abs(x - y) <= 10 for x, y in zip(base_pic.getpixel((i, j)), pic.getpixel((i, j)))):  # type: ignore
                     average[0] += 1
                 average[1] += 1
 
-        if average[0] / average[1] > 55:
+        if average[0] / average[1] > 40:
             print("Face detected")
         else:
             print("Face not detected")
