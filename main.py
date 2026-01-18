@@ -20,8 +20,17 @@ def take_picture():
 
 def main(baseline: bool = False):
     if baseline:
+        print("Please get out of frame for baseline pic. Be back in 5 seconds.")
         with open(f"{Path().home()}/baseline_pic_faceID.png", "wb") as f:
             f.write(take_picture()[1])
+
+        print("Be in the frame for next picture.")
+        for i in range(10, 0, -1):
+            print(i)
+        print("Taking picture...")
+        with open(f"{Path().home()}/baseline_pic_faceID.png", "wb") as f:
+            f.write(take_picture()[1])
+        print("Done")
 
     else:
         base_pic = PIL.Image.open(Path().home() / "baseline_pic_faceID.png")
@@ -35,7 +44,7 @@ def main(baseline: bool = False):
                 average[1] += 1
 
         print(average[0] / average[1] * 100)
-        if average[0] / average[1] * 100 > 85:
+        if average[0] / average[1] * 100 > 67:
             print("Face detected")
         else:
             print("Face not detected")
