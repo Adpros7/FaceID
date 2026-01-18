@@ -1,5 +1,6 @@
 from email.mime import base
 from pathlib import Path
+import time
 import PIL.Image
 import PIL.ImageDraw
 import cv2  # type: ignore
@@ -29,6 +30,7 @@ def main(baseline: bool = False):
         print("Be in the frame for next picture.")
         for i in range(10, 0, -1):
             print(i)
+            time.sleep(1)
         print("Taking picture...")
         with open(f"{Path().home()}/baseline_pic_faceID.png", "wb") as f:
             f.write(take_picture()[1])
@@ -40,7 +42,7 @@ def main(baseline: bool = False):
         baseline_pic_no_human.resize(baseline_pic_with_human.size)
         for i in range(baseline_pic_with_human.size[0]):
             for j in range(baseline_pic_with_human.size[1]):
-                if all(abs(x - y) <= 7 for x, y in zip(baseline_pic_no_human.getpixel((i, j)), pic.baseline_pic_with_human.getpixel((i, j)))):  # type: ignore
+                if all(abs(x - y) <= 7 for x, y in zip(baseline_pic_no_human.getpixel((i, j)), baseline_pic_with_human.getpixel((i, j)))):  # type: ignore
                     PIL.ImageDraw.Draw(baseline_pic_with_human).point((i, j), (0, 0, 0))
                     coords_blackout.append((i, j))
 
